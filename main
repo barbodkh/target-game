@@ -3,40 +3,28 @@ import pygame
 pygame.init()
 
 page = pygame.display.set_mode(flags=pygame.FULLSCREEN)
-pygame.display.set_caption('target')
+pygame.display.set_caption("target")
 
 finished = False
 
 blue = (84, 192, 220)
 white = (255, 255, 255)
 
-bk1 = pygame.image.load('back ground #1.png')
+bk1 = pygame.image.load('back g #1.png')
 page.blit(bk1, (0, 0))
 
 
-
 start = pygame.image.load('start.png')
-page.blit(start, (460, 73))
-
 exit = pygame.image.load('exit.png')
-page.blit(exit, (460, 280))
-
-
-
 exitk = pygame.image.load('exitk.png')
-
-exi = pygame.draw.rect(page, white,(460,280,439,171), 0)
-
-
 startk = pygame.image.load('startk.png')
-
-
-str =pygame.draw.rect(page, white,(460,73,441,169), 0)
-page.blit(start, (460, 73))
+#"second loop":
 
 while not finished:
     for e in pygame.event.get():
 # start
+        str =pygame.draw.rect(page, white,(460,73,441,169), 0)
+        page.blit(start, (460, 73))
         if e.type == pygame.MOUSEMOTION:
            if str.collidepoint(e.pos):
                 page.blit(startk, (460, 73))
@@ -45,8 +33,13 @@ while not finished:
         if e.type == pygame.MOUSEBUTTONUP:
             if str.collidepoint(e.pos):
                 print ("key start got pres")
+                finished = 1
+                break
 # exit
+        exi = pygame.draw.rect(page, white, (460, 280, 439, 171), 0)
+        page.blit(exit, (460, 280))
         if e.type == pygame.MOUSEMOTION:
+            m = e.pos[1]
             if exi.collidepoint(e.pos):
                 page.blit(exitk, (460, 280))
             else:
@@ -54,13 +47,24 @@ while not finished:
         if e.type == pygame.MOUSEBUTTONUP:
             if exi.collidepoint(e.pos):
                 print("key exit got pres")
-                finished = 1
                 break
         if e.type == pygame.QUIT:
             finished = 1
             break
         elif e.type == pygame.KEYUP:
             if e.key == pygame.K_ESCAPE:
+                finished = True
+                break
+    pygame.display.update()
+finished = False
+
+while not finished :
+    for p in pygame.event.get():
+        if p == pygame.MOUSEMOTION :
+            m = p.pos[1]
+        pygame.draw.rect(page, (0, 0, 0), (0, m, 50, 50), 0)
+        if p.type == pygame.KEYUP:
+            if p.key == pygame.K_ESCAPE:
                 finished = True
                 break
     pygame.display.update()
