@@ -19,7 +19,7 @@ exit = pygame.image.load('exit.png')
 exitk = pygame.image.load('exitk.png')
 startk = pygame.image.load('startk.png')
 #"second loop":
-
+target = pygame.image.load('target.png')
 while not finished:
     for e in pygame.event.get():
 # start
@@ -57,12 +57,13 @@ while not finished:
                 break
     pygame.display.update()
 finished = False
-
+page.fill((255,255,255))
+page.blit(bk1, (0, 0))
 while not finished :
     for p in pygame.event.get():
         if p == pygame.MOUSEMOTION :
             m = p.pos[1]
-        pygame.draw.rect(page, (0, 0, 0), (0, m, 50, 50), 0)
+        page.blit(target,(70,m))
         if p.type == pygame.KEYUP:
             if p.key == pygame.K_ESCAPE:
                 finished = True
