@@ -1,4 +1,14 @@
 import pygame
+import sys
+import arrow as ar
+import random as rn
+
+
+def exit_game():
+    pygame.display.quit()
+    pygame.quit()
+    sys.exit()
+
 
 pygame.init()
 
@@ -13,59 +23,74 @@ white = (255, 255, 255)
 bk1 = pygame.image.load('back g #1.png')
 page.blit(bk1, (0, 0))
 
-
+w,h = pygame.display.get_surface().get_size()
 start = pygame.image.load('start.png')
 exit = pygame.image.load('exit.png')
 exitk = pygame.image.load('exitk.png')
 startk = pygame.image.load('startk.png')
+arrow_pic = pygame.image.load('arrow.png')
+arrow_pic = pygame.transform.scale(arrow_pic, (int(arrow_pic.get_size()[0]/3),int(arrow_pic.get_size()[1]/3)))
 #"second loop":
 target = pygame.image.load('target.png')
+print(target.get_size())
 while not finished:
     for e in pygame.event.get():
 # start
         str =pygame.draw.rect(page, white,(460,73,441,169), 0)
+        exi = pygame.draw.rect(page, white, (460, 280, 439, 171), 0)
         page.blit(start, (460, 73))
+        page.blit(exit, (460, 280))
         if e.type == pygame.MOUSEMOTION:
-           if str.collidepoint(e.pos):
+            if str.collidepoint(e.pos):
                 page.blit(startk, (460, 73))
-           else:
+                page.blit(exit, (460, 280))
+            elif exi.collidepoint(e.pos):
                 page.blit(start, (460, 73))
-        if e.type == pygame.MOUSEBUTTONUP:
+                page.blit(exitk, (460, 280))
+            else:
+               page.blit(exit, (460, 280))
+               page.blit(start, (460, 73))
+        elif e.type == pygame.MOUSEBUTTONUP:
             if str.collidepoint(e.pos):
                 print ("key start got pres")
                 finished = 1
                 break
-# exit
-        exi = pygame.draw.rect(page, white, (460, 280, 439, 171), 0)
-        page.blit(exit, (460, 280))
-        if e.type == pygame.MOUSEMOTION:
-            m = e.pos[1]
-            if exi.collidepoint(e.pos):
-                page.blit(exitk, (460, 280))
-            else:
-                page.blit(exit, (460, 280))
-        if e.type == pygame.MOUSEBUTTONUP:
-            if exi.collidepoint(e.pos):
+            elif exi.collidepoint(e.pos):
                 print("key exit got pres")
-                break
-        if e.type == pygame.QUIT:
-            finished = 1
-            break
+                exit_game()
+        elif e.type == pygame.QUIT:
+            exit_game()
         elif e.type == pygame.KEYUP:
             if e.key == pygame.K_ESCAPE:
-                finished = True
-                break
+                exit_game()
     pygame.display.update()
+
 finished = False
+fps_clock = pygame.time.Clock()
 page.fill((255,255,255))
-page.blit(bk1, (0, 0))
-while not finished :
+m = target.get_size()[1]/2
+counter = 0.0
+arr = ar.Arrow()
+ps = -1
+while not finished:
+    page.blit(bk1, (0, 0))
+    page.blit(target, (70, m - target.get_size()[1]/2))
+    counter += 1 / 30.0
+    if counter >= 3: 
+        counter = 0
+        ps = arr.add_arrow(arrow_pic, rn.randint(163,192), rn.randint(15,20), w-50, int(h/2))
+    i = 0
+    while i <= ps:
+        page.blit(arr.pic_list[i], (arr.pos_list_x[i], arr.pos_list_y[i]))
+        i, ps = arr.update_pos(i, arr.spd_list[i], w, h)
+        i += 1
+
     for p in pygame.event.get():
-        if p == pygame.MOUSEMOTION :
+        if p.type == pygame.MOUSEMOTION:
             m = p.pos[1]
-        page.blit(target,(70,m))
         if p.type == pygame.KEYUP:
             if p.key == pygame.K_ESCAPE:
-                finished = True
-                break
+                exit_game()
     pygame.display.update()
+    fps_clock.tick(30)
+   
